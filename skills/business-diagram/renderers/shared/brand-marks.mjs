@@ -25,6 +25,14 @@ const MAX_IMAGE_BYTES = 1024 * 1024;
 const MAX_CAPTURE_CONCURRENCY = 3;
 const DEFAULT_CAPTURE_TIMEOUT_MS = 8000;
 const USER_AGENT = 'Mosofin/2.15 brand-preview';
+// Preset plates are published by MosoFin/mosofin-diagram. Do not vendor them here.
+const MOSOFIN_DIAGRAM_BRAND_SVG_BASE = 'https://raw.githubusercontent.com/MosoFin/mosofin-diagram/main/docs/design-handoff/assets/brand-marks/catalog/';
+
+export function brandMarkAssetUrl(mark) {
+  const id = mark?.id;
+  if (!id) return '';
+  return `${MOSOFIN_DIAGRAM_BRAND_SVG_BASE}${encodeURIComponent(id)}.svg`;
+}
 
 function lookupForms(value) {
   const raw = String(value ?? '').trim().toLocaleLowerCase('en-US');
@@ -556,8 +564,8 @@ export function renderBrandMark(node, { x, y, size = 16 } = {}) {
   const inset = 3;
   let content;
   if (mark.kind === 'preset') {
-    const scale = (size - inset * 2) / mark.viewBox;
-    content = `<path d="${esc(mark.path)}" transform="translate(${inset} ${inset}) scale(${scale})" fill="#${esc(mark.hex)}"/>`;
+    const href = brandMarkAssetUrl(mark);
+    content = `<image href="${esc(href)}" x="${inset}" y="${inset}" width="${size - inset * 2}" height="${size - inset * 2}" preserveAspectRatio="xMidYMid meet"/>`;
   } else if (mark.kind === 'remote') {
     content = `<image href="${esc(mark.dataUrl)}" x="${inset}" y="${inset}" width="${size - inset * 2}" height="${size - inset * 2}" preserveAspectRatio="xMidYMid meet"/>`;
   } else {

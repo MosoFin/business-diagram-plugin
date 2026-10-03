@@ -125,7 +125,7 @@ node bin/mosofin.mjs doctor
 node bin/mosofin.mjs demo <output-directory>
 ```
 
-`npm run prepare` assembles `assets/template.html` and writes `renderers/shared/generated-validators.mjs` and `renderers/shared/generated-brand-marks.mjs`. `npm install` is only for those generators. After that, validation and rendering make no network calls. If a shell is unavailable, stop and say so. Do not hand-write HTML; the validated artifact comes from this CLI. Read `references/delivery-contract.md` for the visual review contract.
+`npm run prepare` assembles `assets/template.html` and writes `renderers/shared/generated-validators.mjs` and `renderers/shared/generated-brand-marks.mjs`. `npm install` is only for those generators. After that, validation and rendering make no network calls. Preset logos are not copied into this plugin: the HTML references `https://raw.githubusercontent.com/MosoFin/mosofin-diagram/main/docs/design-handoff/assets/brand-marks/catalog/<id>.svg`, and the browser loads that plate when the diagram is opened. If a shell is unavailable, stop and say so. Do not hand-write HTML; the validated artifact comes from this CLI. Read `references/delivery-contract.md` for the visual review contract.
 
 ## Output
 

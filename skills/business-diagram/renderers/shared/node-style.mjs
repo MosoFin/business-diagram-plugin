@@ -18,7 +18,7 @@
 // and authored coordinates are identical in both — logo mode never moves a node.
 
 import { esc, renderSemanticSigil } from './utils.mjs';
-import { brandMarkFor } from './brand-marks.mjs';
+import { brandMarkAssetUrl, brandMarkFor } from './brand-marks.mjs';
 import { domainIconFor, renderDomainIcon } from './domain-icons.mjs';
 
 export const NODE_STYLES = Object.freeze(['box', 'logo']);
@@ -82,8 +82,8 @@ export function renderLogoNode(node, { x, y, width, height, label }) {
 
   let content;
   if (mark.kind === 'preset') {
-    const scale = Math.round((art / mark.viewBox) * 10000) / 10000;
-    content = `<path d="${esc(mark.path)}" transform="translate(${artX} ${artY}) scale(${scale})" fill="#${esc(mark.hex)}"/>`;
+    const href = brandMarkAssetUrl(mark);
+    content = `<image href="${esc(href)}" x="${artX}" y="${artY}" width="${art}" height="${art}" preserveAspectRatio="xMidYMid meet"/>`;
   } else {
     content = `<image href="${esc(mark.dataUrl)}" x="${artX}" y="${artY}" width="${art}" height="${art}" preserveAspectRatio="xMidYMid meet"/>`;
   }

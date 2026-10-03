@@ -78,9 +78,11 @@ content digest. Later render and validate operations require that exact digest;
 blocked, unavailable, changed, oversized, or unsafe content fails closed instead
 of silently changing the artifact.
 
-The final artifact never fetches a brand asset when opened. Preset vectors and
-digest-verified captured site icons remain embedded in SVG, PNG, WebP, JPEG,
-Share Card, and WebM exports.
+Preset marks in the artifact point at MosoFin/mosofin-diagram, not a vendored
+bundle. Each plate is
+`https://raw.githubusercontent.com/MosoFin/mosofin-diagram/main/docs/design-handoff/assets/brand-marks/catalog/<id>.svg`
+and the opened diagram loads that SVG. Digest-verified captured site icons stay
+embedded.
 
 Use `node bin/mosofin.mjs brands --json` to inspect all canonical IDs, aliases,
 categories, domains, and provenance. Current categories cover AI, cloud,
