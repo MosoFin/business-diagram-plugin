@@ -1,1 +1,7 @@
 .DS_Store
+node_modules/
+
+# Built locally. Each file is over the 256 KiB directory-scan limit.
+skills/business-diagram/assets/template.html
+skills/business-diagram/renderers/shared/generated-validators.mjs
+skills/business-diagram/renderers/shared/generated-brand-marks.mjs

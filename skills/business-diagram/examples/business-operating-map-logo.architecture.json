@@ -1,0 +1,455 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Business map in logos (2026-07)",
+    "output": "business-operating-map-logo.html",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "node_style": "logo",
+    "legend": {
+      "entries": {
+        "frontend": {
+          "label": "Order to cash"
+        },
+        "backend": {
+          "label": "Operations · payments"
+        },
+        "security": {
+          "label": "Approval gate"
+        },
+        "cloud": {
+          "label": "Cash"
+        },
+        "database": {
+          "label": "Books, per entity"
+        },
+        "external": {
+          "label": "Counterparty"
+        }
+      }
+    },
+    "views": [
+      {
+        "id": "procure-to-pay",
+        "label": "Procure to pay",
+        "focus": [
+          "suppliers",
+          "erp",
+          "wms",
+          "spend",
+          "bank"
+        ],
+        "note": "NetSuite raises the PO and books landed cost. The vendor bill is approved in Ramp before any cash leaves the bank."
+      },
+      {
+        "id": "order-to-cash",
+        "label": "Order to cash",
+        "focus": [
+          "crm",
+          "commerce",
+          "payments",
+          "bank",
+          "books_roastery"
+        ],
+        "note": "An order becomes a Stripe charge, the charge settles as a net payout, and only then does it reach the books."
+      },
+      {
+        "id": "record-to-report",
+        "label": "Record to report",
+        "focus": [
+          "bank",
+          "books_roastery",
+          "books_wholesale",
+          "books_cafes",
+          "payroll"
+        ],
+        "note": "The stack is shared; the books are not. Each entity has its own Chase account, payroll and QuickBooks company."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "suppliers",
+      "type": "external",
+      "label": "Suppliers",
+      "sublabel": "green coffee · vendors",
+      "icon": "supplier",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "erp",
+      "type": "backend",
+      "label": "Supply chain · ERP",
+      "sublabel": "NetSuite · POs · landed cost",
+      "tag": "cost SoT",
+      "icon": "supply-chain",
+      "pos": [
+        195,
+        130
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "wms",
+      "type": "backend",
+      "label": "Inventory · 3PL",
+      "sublabel": "NetSuite WMS · 3PL",
+      "tag": "units SoT",
+      "icon": "warehouse",
+      "pos": [
+        460,
+        130
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "commerce",
+      "type": "frontend",
+      "label": "Commerce",
+      "sublabel": "Shopify · DTC orders · tax",
+      "tag": "orders SoT",
+      "brand": "shopify",
+      "pos": [
+        725,
+        130
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "crm",
+      "type": "frontend",
+      "label": "Demand · CRM",
+      "sublabel": "HubSpot · wholesale accounts",
+      "tag": "accounts SoT",
+      "brand": "hubspot",
+      "pos": [
+        840,
+        40
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "spend",
+      "type": "security",
+      "label": "Spend · AP",
+      "sublabel": "Ramp · bills · cards",
+      "tag": "approval gate",
+      "icon": "spend",
+      "pos": [
+        195,
+        236
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "payroll",
+      "type": "security",
+      "label": "Payroll · HR",
+      "sublabel": "Gusto · per entity",
+      "tag": "approval gate",
+      "brand": "gusto",
+      "pos": [
+        195,
+        322
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "bank",
+      "type": "cloud",
+      "label": "Bank",
+      "sublabel": "Chase · one account per entity",
+      "tag": "cash SoT",
+      "brand": "chase",
+      "pos": [
+        455,
+        246
+      ],
+      "size": [
+        160,
+        128
+      ]
+    },
+    {
+      "id": "payments",
+      "type": "backend",
+      "label": "Payments",
+      "sublabel": "Stripe · fees · payouts",
+      "tag": "charges SoT",
+      "brand": "stripe",
+      "pos": [
+        725,
+        279
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "books_cafes",
+      "type": "database",
+      "label": "Books · Cafés",
+      "sublabel": "Northline Cafés LLC",
+      "tag": "books SoT",
+      "brand": "quickbooks",
+      "pos": [
+        195,
+        440
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "books_wholesale",
+      "type": "database",
+      "label": "Books · Wholesale",
+      "sublabel": "Northline Wholesale LLC",
+      "tag": "books SoT",
+      "brand": "quickbooks",
+      "pos": [
+        460,
+        440
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "books_roastery",
+      "type": "database",
+      "label": "Books · Coffee",
+      "sublabel": "Northline Coffee LLC",
+      "tag": "books SoT",
+      "brand": "quickbooks",
+      "pos": [
+        725,
+        440
+      ],
+      "size": [
+        150,
+        62
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Procure to pay · shared",
+      "wraps": [
+        "suppliers",
+        "erp",
+        "spend"
+      ],
+      "pad": 12
+    },
+    {
+      "kind": "region",
+      "label": "Order to cash · shared",
+      "wraps": [
+        "commerce",
+        "crm",
+        "payments"
+      ],
+      "pad": 12
+    },
+    {
+      "kind": "region",
+      "label": "Record to report · one QuickBooks company per entity",
+      "wraps": [
+        "books_cafes",
+        "books_wholesale",
+        "books_roastery"
+      ],
+      "pad": 12
+    }
+  ],
+  "connections": [
+    {
+      "id": "inbound",
+      "from": "suppliers",
+      "to": "erp",
+      "label": "goods vs POs",
+      "fromSide": "right",
+      "toSide": "top"
+    },
+    {
+      "id": "receipts",
+      "from": "erp",
+      "to": "wms",
+      "label": "receipts · cost",
+      "variant": "dashed"
+    },
+    {
+      "id": "available",
+      "from": "wms",
+      "to": "commerce",
+      "label": "available to sell",
+      "variant": "dashed"
+    },
+    {
+      "id": "accounts",
+      "from": "crm",
+      "to": "commerce",
+      "label": "wholesale accounts",
+      "fromSide": "left",
+      "toSide": "top",
+      "labelAt": [
+        742,
+        104
+      ]
+    },
+    {
+      "id": "charge",
+      "from": "commerce",
+      "to": "payments",
+      "label": "charge",
+      "variant": "emphasis",
+      "labelAt": [
+        800,
+        239
+      ]
+    },
+    {
+      "id": "payout",
+      "from": "payments",
+      "to": "bank",
+      "label": "net payout",
+      "variant": "emphasis"
+    },
+    {
+      "id": "bills",
+      "from": "erp",
+      "to": "spend",
+      "label": "vendor bills",
+      "labelAt": [
+        270,
+        218
+      ]
+    },
+    {
+      "id": "pay_run",
+      "from": "spend",
+      "to": "bank",
+      "label": "payment run",
+      "variant": "security"
+    },
+    {
+      "id": "wages",
+      "from": "payroll",
+      "to": "bank",
+      "label": "wages · taxes",
+      "variant": "security"
+    },
+    {
+      "id": "feed_cafes",
+      "from": "bank",
+      "to": "books_cafes",
+      "label": "bank feed",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "feed_wholesale",
+      "from": "bank",
+      "to": "books_wholesale",
+      "label": "bank feed",
+      "variant": "emphasis",
+      "labelAt": [
+        535,
+        428
+      ]
+    },
+    {
+      "id": "feed_roastery",
+      "from": "bank",
+      "to": "books_roastery",
+      "label": "bank feed",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "revenue",
+      "from": "commerce",
+      "to": "books_roastery",
+      "label": "DTC sales + tax",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "right",
+      "via": [
+        [
+          910,
+          161
+        ],
+        [
+          910,
+          471
+        ]
+      ],
+      "labelAt": [
+        910,
+        236
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Three cycles, one bank",
+      "items": [
+        "P2P: PO → Ramp bill → Chase",
+        "O2C: order → Stripe → Chase",
+        "R2R: Chase → QuickBooks"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Guardrails",
+      "items": [
+        "Shared stack, own books",
+        "No amounts were supplied",
+        "Not drawn: ACH, Metabase"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "How to read it",
+      "items": [
+        "Goods run left to right",
+        "Solid lines move money",
+        "Dashed lines carry records"
+      ]
+    }
+  ]
+}
