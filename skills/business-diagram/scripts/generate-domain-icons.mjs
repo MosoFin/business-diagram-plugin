@@ -26,7 +26,7 @@ function fail(message) {
 }
 
 // Keep only geometry. Presentation (stroke, fill, colour) belongs to the
-// renderer's semantic-sigil styling so icons follow the node's theme tokens.
+// renderer's semantic-sigil styling so icons follow the node's colours.
 function iconBody(name) {
   const file = path.join(lucideRoot, 'icons', `${name}.svg`);
   if (!fs.existsSync(file)) fail(`lucide-static ${lucideVersion} has no icon "${name}"`);
@@ -36,10 +36,10 @@ function iconBody(name) {
   if (!elements.length) fail(`icon "${name}" has no drawable elements`);
   return elements.map(([, tag, rawAttrs]) => {
     if (!SHAPES.has(tag)) fail(`icon "${name}" uses unsupported element <${tag}>`);
-    const attrs = [...rawAttrs.matchAll(/([a-z0-9-]+)="([^"]*)"/g)].map(([, key, value]) => {
-      if (!GEOMETRY.has(key)) fail(`icon "${name}" <${tag}> carries non-geometry attribute ${key}`);
-      if (!/^[-0-9a-zA-Z .,]*$/.test(value)) fail(`icon "${name}" <${tag}> ${key} has unexpected characters`);
-      return `${key}="${value}"`;
+    const attrs = [...rawAttrs.matchAll(/([a-z0-9-]+)="([^"]*)"/g)].map(([, attrName, attrValue]) => {
+      if (!GEOMETRY.has(attrName)) fail(`icon "${name}" <${tag}> carries non-geometry attribute ${attrName}`);
+      if (!/^[-0-9a-zA-Z .,]*$/.test(attrValue)) fail(`icon "${name}" <${tag}> ${attrName} has unexpected characters`);
+      return `${attrName}="${attrValue}"`;
     });
     return `<${tag} ${attrs.join(' ')}/>`;
   }).join('');
@@ -53,10 +53,10 @@ const icons = catalog.icons.map((entry, index) => {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.id || '')) fail(`icons[${index}] has an invalid id`);
   if (!entry.title || !entry.use || !entry.lucide) fail(`icons[${index}] ${entry.id} needs title, use and lucide`);
   const aliases = [...new Set((entry.aliases || []).map((alias) => String(alias).trim().toLowerCase()).filter(Boolean))];
-  for (const key of [entry.id, ...aliases]) {
-    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(key)) fail(`${entry.id} alias "${key}" must be lowercase dash-case`);
-    if (seen.has(key)) fail(`"${key}" is claimed by both ${seen.get(key)} and ${entry.id}`);
-    seen.set(key, entry.id);
+  for (const label of [entry.id, ...aliases]) {
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(label)) fail(`${entry.id} alias "${label}" must be lowercase dash-case`);
+    if (seen.has(label)) fail(`"${label}" is claimed by both ${seen.get(label)} and ${entry.id}`);
+    seen.set(label, entry.id);
   }
   return { id: entry.id, title: entry.title, use: entry.use, aliases, lucide: entry.lucide, body: iconBody(entry.lucide) };
 });

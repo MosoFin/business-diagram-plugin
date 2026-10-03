@@ -5582,17 +5582,17 @@
        ============================================================ */
 
     Mosofin.nodeStyle = (function () {
-      var STORAGE_KEY = 'mosofin-node-style';
+      var storedName = 'mosofin-node-style';
       var html = document.documentElement;
       var btn = document.getElementById('btn-nodestyle');
       var label = document.getElementById('nodestyle-label');
       var authored = html.getAttribute('data-node-style') === 'logo' ? 'logo' : 'box';
 
       function readStored() {
-        try { return localStorage.getItem(STORAGE_KEY); } catch (_) { return null; }
+        try { return localStorage.getItem(storedName); } catch (_) { return null; }
       }
       function writeStored(value) {
-        try { localStorage.setItem(STORAGE_KEY, value); } catch (_) {}
+        try { localStorage.setItem(storedName, value); } catch (_) {}
       }
       function urlOverride() {
         try {
@@ -5622,7 +5622,7 @@
     })();
 
     Mosofin.theme = (function () {
-      var STORAGE_KEY = 'mosofin-theme';
+      var storedName = 'mosofin-theme';
       var html = document.documentElement;
       var btn = document.getElementById('btn-theme');
       var label = document.getElementById('theme-label');
@@ -5630,10 +5630,10 @@
       // localStorage can throw (blocked cookies, sandboxed iframes); the whole
       // script element dies on an uncaught error, so guard every access.
       function readStored() {
-        try { return localStorage.getItem(STORAGE_KEY); } catch (_) { return null; }
+        try { return localStorage.getItem(storedName); } catch (_) { return null; }
       }
       function writeStored(value) {
-        try { localStorage.setItem(STORAGE_KEY, value); } catch (_) {}
+        try { localStorage.setItem(storedName, value); } catch (_) {}
       }
       function urlOverride() {
         // URL param wins (useful for deterministic screenshots / share links)

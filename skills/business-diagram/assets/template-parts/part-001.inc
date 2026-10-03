@@ -1480,7 +1480,7 @@
        viewer signals without discarding their static meaning.
        ============================================================ */
     Mosofin.motionGovernor = (function () {
-      var STORAGE_KEY = 'mosofin-motion';
+      var storedName = 'mosofin-motion';
       var html = document.documentElement;
       var svg = document.querySelector('.diagram-container svg');
       var btn = document.getElementById('btn-motion');
@@ -1529,12 +1529,12 @@
       }
 
       function readStored() {
-        try { return localStorage.getItem(STORAGE_KEY); } catch (_) { return null; }
+        try { return localStorage.getItem(storedName); } catch (_) { return null; }
       }
       function writeStored() {
         try {
-          if (readerPaused) localStorage.setItem(STORAGE_KEY, 'still');
-          else localStorage.removeItem(STORAGE_KEY);
+          if (readerPaused) localStorage.setItem(storedName, 'still');
+          else localStorage.removeItem(storedName);
         } catch (_) {}
       }
       function reducedMotion() {

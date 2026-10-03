@@ -19,24 +19,35 @@ const diagramTypes = new Set(['architecture', 'workflow', 'sequence', 'dataflow'
 
 
 function childProcessEnv(overrides = {}) {
-  const allow = [
-    'PATH', 'PATHEXT', 'SYSTEMROOT', 'WINDIR', 'TMP', 'TEMP', 'TMPDIR',
-    'HOME', 'USERPROFILE', 'APPDATA', 'LOCALAPPDATA', 'PROGRAMFILES', 'PROGRAMFILES(X86)',
-    'LANG', 'LC_ALL', 'LC_CTYPE', 'TERM', 'COLORTERM',
-    'NODE_OPTIONS', 'NODE_PATH', 'NODE_EXTRA_CA_CERTS',
-    'MOSOFIN_QUALITY_PROFILE', 'MOSOFIN_DIAGNOSTIC_FORMAT', 'MOSOFIN_REPO_ROOT',
-    'MOSOFIN_BRAND_ALLOW_PRIVATE', 'MOSOFIN_BRAND_CAPTURE_TIMEOUT_MS',
-    'MOSOFIN_CHROME', 'MOSOFIN_CHROME_NO_SANDBOX',
-  ];
   const env = {};
-  for (const key of allow) {
-    if (Object.prototype.hasOwnProperty.call(process.env, key) && process.env[key] != null) {
-      env[key] = process.env[key];
-    }
-  }
-  for (const [key, value] of Object.entries(process.env)) {
-    if (key.startsWith('CLAUDE_PLUGIN_OPTION_') && value != null) env[key] = value;
-  }
+  if (process.env.PATH != null) env.PATH = process.env.PATH;
+  if (process.env.PATHEXT != null) env.PATHEXT = process.env.PATHEXT;
+  if (process.env.SYSTEMROOT != null) env.SYSTEMROOT = process.env.SYSTEMROOT;
+  if (process.env.WINDIR != null) env.WINDIR = process.env.WINDIR;
+  if (process.env.TMP != null) env.TMP = process.env.TMP;
+  if (process.env.TEMP != null) env.TEMP = process.env.TEMP;
+  if (process.env.TMPDIR != null) env.TMPDIR = process.env.TMPDIR;
+  if (process.env.HOME != null) env.HOME = process.env.HOME;
+  if (process.env.USERPROFILE != null) env.USERPROFILE = process.env.USERPROFILE;
+  if (process.env.APPDATA != null) env.APPDATA = process.env.APPDATA;
+  if (process.env.LOCALAPPDATA != null) env.LOCALAPPDATA = process.env.LOCALAPPDATA;
+  if (process.env.PROGRAMFILES != null) env.PROGRAMFILES = process.env.PROGRAMFILES;
+  if (process.env['PROGRAMFILES(X86)'] != null) env['PROGRAMFILES(X86)'] = process.env['PROGRAMFILES(X86)'];
+  if (process.env.LANG != null) env.LANG = process.env.LANG;
+  if (process.env.LC_ALL != null) env.LC_ALL = process.env.LC_ALL;
+  if (process.env.LC_CTYPE != null) env.LC_CTYPE = process.env.LC_CTYPE;
+  if (process.env.TERM != null) env.TERM = process.env.TERM;
+  if (process.env.COLORTERM != null) env.COLORTERM = process.env.COLORTERM;
+  if (process.env.NODE_OPTIONS != null) env.NODE_OPTIONS = process.env.NODE_OPTIONS;
+  if (process.env.NODE_PATH != null) env.NODE_PATH = process.env.NODE_PATH;
+  if (process.env.MOSOFIN_QUALITY_PROFILE != null) env.MOSOFIN_QUALITY_PROFILE = process.env.MOSOFIN_QUALITY_PROFILE;
+  if (process.env.MOSOFIN_DIAGNOSTIC_FORMAT != null) env.MOSOFIN_DIAGNOSTIC_FORMAT = process.env.MOSOFIN_DIAGNOSTIC_FORMAT;
+  if (process.env.MOSOFIN_REPO_ROOT != null) env.MOSOFIN_REPO_ROOT = process.env.MOSOFIN_REPO_ROOT;
+  if (process.env.MOSOFIN_ALLOW_LAN_BRANDS != null) env.MOSOFIN_ALLOW_LAN_BRANDS = process.env.MOSOFIN_ALLOW_LAN_BRANDS;
+  if (process.env.MOSOFIN_BRAND_CAPTURE_TIMEOUT_MS != null) env.MOSOFIN_BRAND_CAPTURE_TIMEOUT_MS = process.env.MOSOFIN_BRAND_CAPTURE_TIMEOUT_MS;
+  if (process.env.MOSOFIN_CHROME != null) env.MOSOFIN_CHROME = process.env.MOSOFIN_CHROME;
+  if (process.env.MOSOFIN_CHROME_NO_SANDBOX != null) env.MOSOFIN_CHROME_NO_SANDBOX = process.env.MOSOFIN_CHROME_NO_SANDBOX;
+  if (process.env.CLAUDE_PLUGIN_OPTION_CHROME_PATH != null) env.CLAUDE_PLUGIN_OPTION_CHROME_PATH = process.env.CLAUDE_PLUGIN_OPTION_CHROME_PATH;
   return { ...env, ...overrides };
 }
 

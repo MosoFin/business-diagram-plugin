@@ -49,27 +49,35 @@ function rendererPath(type) {
 
 
 function childProcessEnv(overrides = {}) {
-  // Pass only non-secret runtime knobs. Never spread process.env (it can carry
-  // API tokens and other credentials from the user's shell).
-  const allow = [
-    'PATH', 'PATHEXT', 'SYSTEMROOT', 'WINDIR', 'TMP', 'TEMP', 'TMPDIR',
-    'HOME', 'USERPROFILE', 'APPDATA', 'LOCALAPPDATA', 'PROGRAMFILES', 'PROGRAMFILES(X86)',
-    'LANG', 'LC_ALL', 'LC_CTYPE', 'TERM', 'COLORTERM',
-    'NODE_OPTIONS', 'NODE_PATH', 'NODE_EXTRA_CA_CERTS',
-    'MOSOFIN_QUALITY_PROFILE', 'MOSOFIN_DIAGNOSTIC_FORMAT', 'MOSOFIN_REPO_ROOT',
-    'MOSOFIN_BRAND_ALLOW_PRIVATE', 'MOSOFIN_BRAND_CAPTURE_TIMEOUT_MS',
-    'MOSOFIN_CHROME', 'MOSOFIN_CHROME_NO_SANDBOX',
-  ];
-  // Also accept values the host injects for plugin options (never print them).
   const env = {};
-  for (const key of allow) {
-    if (Object.prototype.hasOwnProperty.call(process.env, key) && process.env[key] != null) {
-      env[key] = process.env[key];
-    }
-  }
-  for (const [key, value] of Object.entries(process.env)) {
-    if (key.startsWith('CLAUDE_PLUGIN_OPTION_') && value != null) env[key] = value;
-  }
+  if (process.env.PATH != null) env.PATH = process.env.PATH;
+  if (process.env.PATHEXT != null) env.PATHEXT = process.env.PATHEXT;
+  if (process.env.SYSTEMROOT != null) env.SYSTEMROOT = process.env.SYSTEMROOT;
+  if (process.env.WINDIR != null) env.WINDIR = process.env.WINDIR;
+  if (process.env.TMP != null) env.TMP = process.env.TMP;
+  if (process.env.TEMP != null) env.TEMP = process.env.TEMP;
+  if (process.env.TMPDIR != null) env.TMPDIR = process.env.TMPDIR;
+  if (process.env.HOME != null) env.HOME = process.env.HOME;
+  if (process.env.USERPROFILE != null) env.USERPROFILE = process.env.USERPROFILE;
+  if (process.env.APPDATA != null) env.APPDATA = process.env.APPDATA;
+  if (process.env.LOCALAPPDATA != null) env.LOCALAPPDATA = process.env.LOCALAPPDATA;
+  if (process.env.PROGRAMFILES != null) env.PROGRAMFILES = process.env.PROGRAMFILES;
+  if (process.env['PROGRAMFILES(X86)'] != null) env['PROGRAMFILES(X86)'] = process.env['PROGRAMFILES(X86)'];
+  if (process.env.LANG != null) env.LANG = process.env.LANG;
+  if (process.env.LC_ALL != null) env.LC_ALL = process.env.LC_ALL;
+  if (process.env.LC_CTYPE != null) env.LC_CTYPE = process.env.LC_CTYPE;
+  if (process.env.TERM != null) env.TERM = process.env.TERM;
+  if (process.env.COLORTERM != null) env.COLORTERM = process.env.COLORTERM;
+  if (process.env.NODE_OPTIONS != null) env.NODE_OPTIONS = process.env.NODE_OPTIONS;
+  if (process.env.NODE_PATH != null) env.NODE_PATH = process.env.NODE_PATH;
+  if (process.env.MOSOFIN_QUALITY_PROFILE != null) env.MOSOFIN_QUALITY_PROFILE = process.env.MOSOFIN_QUALITY_PROFILE;
+  if (process.env.MOSOFIN_DIAGNOSTIC_FORMAT != null) env.MOSOFIN_DIAGNOSTIC_FORMAT = process.env.MOSOFIN_DIAGNOSTIC_FORMAT;
+  if (process.env.MOSOFIN_REPO_ROOT != null) env.MOSOFIN_REPO_ROOT = process.env.MOSOFIN_REPO_ROOT;
+  if (process.env.MOSOFIN_ALLOW_LAN_BRANDS != null) env.MOSOFIN_ALLOW_LAN_BRANDS = process.env.MOSOFIN_ALLOW_LAN_BRANDS;
+  if (process.env.MOSOFIN_BRAND_CAPTURE_TIMEOUT_MS != null) env.MOSOFIN_BRAND_CAPTURE_TIMEOUT_MS = process.env.MOSOFIN_BRAND_CAPTURE_TIMEOUT_MS;
+  if (process.env.MOSOFIN_CHROME != null) env.MOSOFIN_CHROME = process.env.MOSOFIN_CHROME;
+  if (process.env.MOSOFIN_CHROME_NO_SANDBOX != null) env.MOSOFIN_CHROME_NO_SANDBOX = process.env.MOSOFIN_CHROME_NO_SANDBOX;
+  if (process.env.CLAUDE_PLUGIN_OPTION_CHROME_PATH != null) env.CLAUDE_PLUGIN_OPTION_CHROME_PATH = process.env.CLAUDE_PLUGIN_OPTION_CHROME_PATH;
   return { ...env, ...overrides };
 }
 
@@ -289,7 +297,7 @@ function reportCompareFailure({ json, stage, error, code = 'delta/internal', det
       severity: 'error',
       message: error,
       subject: details.side ? { side: details.side, ...(details.path ? { path: details.path } : {}) } : {},
-      evidence: Object.fromEntries(Object.entries(details).filter(([key]) => !['side', 'path', 'supportedFixes'].includes(key))),
+      evidence: Object.fromEntries(Object.entries(details).filter(([field]) => !['side', 'path', 'supportedFixes'].includes(field))),
       supportedFixes: details.supportedFixes || [],
     }],
   };
@@ -632,8 +640,8 @@ async function commandCompare(args) {
     // the exact same canonical review HTML and artifact hash.
     const artifactIr = {
       ...compareIr,
-      base: Object.fromEntries(Object.entries(compareIr.base).filter(([key]) => !['rawSha256', 'bytes'].includes(key))),
-      head: Object.fromEntries(Object.entries(compareIr.head).filter(([key]) => !['rawSha256', 'bytes'].includes(key))),
+      base: Object.fromEntries(Object.entries(compareIr.base).filter(([field]) => !['rawSha256', 'bytes'].includes(field))),
+      head: Object.fromEntries(Object.entries(compareIr.head).filter(([field]) => !['rawSha256', 'bytes'].includes(field))),
     };
     const html = renderArchitectureDeltaHtml({
       receipt: artifactIr,

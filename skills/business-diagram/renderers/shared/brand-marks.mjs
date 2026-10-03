@@ -138,7 +138,7 @@ function urlIncludesUserinfo(url) {
   return Boolean(match && match[1].includes('@'));
 }
 
-function validateUrlShape(url, allowPrivate = process.env.MOSOFIN_BRAND_ALLOW_PRIVATE === '1') {
+function validateUrlShape(url, allowPrivate = process.env.MOSOFIN_ALLOW_LAN_BRANDS === '1') {
   if (!['https:', 'http:'].includes(url.protocol)) throw new Error('only HTTP(S) brand links are supported');
   if (urlIncludesUserinfo(url)) throw new Error('brand links cannot contain credentials');
   const expectedPort = url.protocol === 'https:' ? '443' : '80';
@@ -166,7 +166,7 @@ function beforeDeadline(promise, deadline) {
 }
 
 async function resolveRequestTarget(url, deadline) {
-  const allowPrivate = process.env.MOSOFIN_BRAND_ALLOW_PRIVATE === '1';
+  const allowPrivate = process.env.MOSOFIN_ALLOW_LAN_BRANDS === '1';
   const host = validateUrlShape(url, allowPrivate);
   const directFamily = net.isIP(host);
   const addresses = directFamily
