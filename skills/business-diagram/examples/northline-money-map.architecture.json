@@ -3,7 +3,7 @@
   "diagram_type": "architecture",
   "meta": {
     "title": "Northline Coffee — Money Map (as of 2026-07)",
-    "output": "northline-money-map.html",
+    "output": "out/northline-money-map.html",
     "animation": "trace",
     "quality_profile": "showcase",
     "node_style": "logo",

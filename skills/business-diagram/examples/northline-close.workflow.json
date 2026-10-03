@@ -3,7 +3,7 @@
   "diagram_type": "workflow",
   "meta": {
     "title": "Northline Coffee — Month-End Close Runbook (2026-07)",
-    "output": "northline-close.html",
+    "output": "out/northline-close.html",
     "animation": "trace",
     "quality_profile": "showcase",
     "views": [

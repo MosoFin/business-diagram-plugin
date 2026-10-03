@@ -3,7 +3,7 @@
   "diagram_type": "lifecycle",
   "meta": {
     "title": "Northline Coffee — Refund and Chargeback Lifecycle (2026-07)",
-    "output": "northline-dispute.html",
+    "output": "out/northline-dispute.html",
     "viewBox": [
       980,
       660

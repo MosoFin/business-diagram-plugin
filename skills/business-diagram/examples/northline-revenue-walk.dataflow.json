@@ -3,7 +3,7 @@
   "diagram_type": "dataflow",
   "meta": {
     "title": "Northline Coffee — July Revenue Walk: Shopify to QuickBooks (2026-07)",
-    "output": "northline-revenue-walk.html",
+    "output": "out/northline-revenue-walk.html",
     "viewBox": [1080, 760],
     "animation": "trace",
     "quality_profile": "showcase",

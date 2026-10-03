@@ -3,7 +3,7 @@
   "diagram_type": "architecture",
   "meta": {
     "title": "Production Deployment Ownership",
-    "output": "examples/production-deployment.html",
+    "output": "out/production-deployment.html",
     "visual_preset": "blueprint",
     "animation": "trace",
     "quality_profile": "showcase",

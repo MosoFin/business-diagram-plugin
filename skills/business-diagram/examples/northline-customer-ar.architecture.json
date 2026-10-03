@@ -3,7 +3,7 @@
   "diagram_type": "architecture",
   "meta": {
     "title": "Northline Coffee — Who Can Say a Customer Owes Us (2026-07)",
-    "output": "northline-customer-ar.html",
+    "output": "out/northline-customer-ar.html",
     "quality_profile": "showcase",
     "node_style": "logo",
     "views": [

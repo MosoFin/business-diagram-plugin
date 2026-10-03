@@ -5,3 +5,6 @@ node_modules/
 skills/business-diagram/assets/template.html
 skills/business-diagram/renderers/shared/generated-validators.mjs
 skills/business-diagram/renderers/shared/generated-brand-marks.mjs
+
+# Generated diagrams (too large for the directory archive)
+out/

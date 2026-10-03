@@ -18,5 +18,15 @@
     "workflow",
     "business"
   ],
-  "skills": "./skills/business-diagram"
+  "skills": "./skills/business-diagram",
+  "icon": "./.claude-plugin/icon.png",
+  "userConfig": {
+    "chrome_path": {
+      "type": "string",
+      "title": "Chrome executable path",
+      "description": "Optional absolute path to Google Chrome or Chromium used only for visual-check screenshots. Leave empty to auto-detect standard install locations. Stored securely; not read from your shell environment.",
+      "sensitive": true,
+      "required": false
+    }
+  }
 }

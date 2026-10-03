@@ -3,7 +3,7 @@
   "diagram_type": "sequence",
   "meta": {
     "title": "Northline Coffee — One DTC Order to the Books (2026-07)",
-    "output": "northline-order-path.html",
+    "output": "out/northline-order-path.html",
     "viewBox": [
       820,
       760

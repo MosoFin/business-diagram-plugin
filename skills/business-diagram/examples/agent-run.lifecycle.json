@@ -3,7 +3,7 @@
   "diagram_type": "lifecycle",
   "meta": {
     "title": "Agent Run Lifecycle",
-    "output": "examples/lifecycle-agent-run.html",
+    "output": "out/lifecycle-agent-run.html",
     "viewBox": [980, 660],
     "animation": "trace",
     "quality_profile": "showcase",

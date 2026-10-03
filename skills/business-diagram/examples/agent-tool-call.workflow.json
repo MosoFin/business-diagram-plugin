@@ -26,7 +26,7 @@
         "note": "Isolate the durable trace and context path behind the visible answer."
       }
     ],
-    "output": "examples/workflow-agent-tool-call-rendered.html",
+    "output": "out/workflow-agent-tool-call-rendered.html",
     "viewBox": [720, 900]
   },
   "lanes": [

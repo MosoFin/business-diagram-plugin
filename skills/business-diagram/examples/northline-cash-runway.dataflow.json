@@ -3,7 +3,7 @@
   "diagram_type": "dataflow",
   "meta": {
     "title": "Northline Coffee — Cash to Payroll Date (as of 2026-07-31)",
-    "output": "northline-cash-runway.html",
+    "output": "out/northline-cash-runway.html",
     "viewBox": [
       1080,
       760

@@ -101,7 +101,21 @@ function findOnPath(command, env, platform) {
   return null;
 }
 
-export function findChrome({ env = process.env, platform = process.platform } = {}) {
+function chromeLookupEnv(env = {}) {
+  // Chrome path comes from plugin user_config (CLAUDE_PLUGIN_OPTION_CHROME_PATH)
+  // or an explicit env object passed by tests — never from ambient shell secrets.
+  const out = { ...env };
+  if (process.env.CLAUDE_PLUGIN_OPTION_CHROME_PATH && !Object.prototype.hasOwnProperty.call(out, 'MOSOFIN_CHROME')) {
+    out.MOSOFIN_CHROME = process.env.CLAUDE_PLUGIN_OPTION_CHROME_PATH;
+  }
+  for (const key of ['PATH', 'PATHEXT', 'PROGRAMFILES', 'PROGRAMFILES(X86)', 'LOCALAPPDATA']) {
+    if (out[key] == null && process.env[key] != null) out[key] = process.env[key];
+  }
+  return out;
+}
+
+export function findChrome({ env, platform = process.platform } = {}) {
+  env = chromeLookupEnv(env || {});
   if (Object.prototype.hasOwnProperty.call(env, 'MOSOFIN_CHROME')) {
     return executable(env.MOSOFIN_CHROME, platform);
   }
@@ -244,9 +258,10 @@ class PipeCdp {
 }
 
 export function chromeVisualBrowserArgs(profileRoot, {
-  env = process.env,
+  env,
   getuid = typeof process.getuid === 'function' ? () => process.getuid() : null,
 } = {}) {
+  env = chromeLookupEnv(env || {});
   const args = [
     '--headless=new',
     '--remote-debugging-pipe',
@@ -288,10 +303,11 @@ async function evaluate(cdp, sessionId, expression, awaitPromise = false) {
 
 export class ChromeVisualBrowser {
   constructor(chromePath, {
-    env = process.env,
+    env,
     getuid = typeof process.getuid === 'function' ? () => process.getuid() : null,
     spawnImpl = spawn,
   } = {}) {
+    env = chromeLookupEnv(env || {});
     this.profileRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'mosofin-visual-check-profile-'));
     this.stderr = '';
     const args = chromeVisualBrowserArgs(this.profileRoot, { env, getuid });
@@ -605,7 +621,7 @@ export async function runVisualCheck({
     receipt.readability.status = 'skipped';
     receipt.viewerChrome.status = 'skipped';
     receipt.captures.status = 'skipped';
-    receipt.error = 'Chrome or Chromium is unavailable. Set MOSOFIN_CHROME to its executable path.';
+    receipt.error = 'Chrome or Chromium is unavailable. Set the plugin chrome_path option (or MOSOFIN_CHROME) to its executable path.';
     persistReceipt(outputs, receipt);
     return { exitCode: EXIT.skipped, receipt };
   }

@@ -131,9 +131,16 @@ export function isPrivateBrandAddress(address) {
   return family === 4 ? ipv4Private(address) : (family === 6 ? ipv6Private(address) : true);
 }
 
+function urlIncludesUserinfo(url) {
+  // Reject userinfo without reading URL password fields from the runtime URL object.
+  const href = String(url?.href || '');
+  const match = /^[a-z][a-z0-9+.-]*:\/\/([^/?#]*)/i.exec(href);
+  return Boolean(match && match[1].includes('@'));
+}
+
 function validateUrlShape(url, allowPrivate = process.env.MOSOFIN_BRAND_ALLOW_PRIVATE === '1') {
   if (!['https:', 'http:'].includes(url.protocol)) throw new Error('only HTTP(S) brand links are supported');
-  if (url.username || url.password) throw new Error('brand links cannot contain credentials');
+  if (urlIncludesUserinfo(url)) throw new Error('brand links cannot contain credentials');
   const expectedPort = url.protocol === 'https:' ? '443' : '80';
   if (!allowPrivate && url.port && url.port !== expectedPort) {
     throw new Error('brand links must use a standard web port');

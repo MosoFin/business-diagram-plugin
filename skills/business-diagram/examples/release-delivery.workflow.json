@@ -3,7 +3,7 @@
   "diagram_type": "workflow",
   "meta": {
     "title": "Release Delivery Workflow",
-    "output": "examples/release-delivery.html",
+    "output": "out/release-delivery.html",
     "animation": "trace",
     "quality_profile": "showcase",
     "views": [

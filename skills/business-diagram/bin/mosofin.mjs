@@ -47,12 +47,38 @@ function rendererPath(type) {
   return path.join(skillRoot, 'renderers', type, `render-${type}.mjs`);
 }
 
+
+function childProcessEnv(overrides = {}) {
+  // Pass only non-secret runtime knobs. Never spread process.env (it can carry
+  // API tokens and other credentials from the user's shell).
+  const allow = [
+    'PATH', 'PATHEXT', 'SYSTEMROOT', 'WINDIR', 'TMP', 'TEMP', 'TMPDIR',
+    'HOME', 'USERPROFILE', 'APPDATA', 'LOCALAPPDATA', 'PROGRAMFILES', 'PROGRAMFILES(X86)',
+    'LANG', 'LC_ALL', 'LC_CTYPE', 'TERM', 'COLORTERM',
+    'NODE_OPTIONS', 'NODE_PATH', 'NODE_EXTRA_CA_CERTS',
+    'MOSOFIN_QUALITY_PROFILE', 'MOSOFIN_DIAGNOSTIC_FORMAT', 'MOSOFIN_REPO_ROOT',
+    'MOSOFIN_BRAND_ALLOW_PRIVATE', 'MOSOFIN_BRAND_CAPTURE_TIMEOUT_MS',
+    'MOSOFIN_CHROME', 'MOSOFIN_CHROME_NO_SANDBOX',
+  ];
+  // Also accept values the host injects for plugin options (never print them).
+  const env = {};
+  for (const key of allow) {
+    if (Object.prototype.hasOwnProperty.call(process.env, key) && process.env[key] != null) {
+      env[key] = process.env[key];
+    }
+  }
+  for (const [key, value] of Object.entries(process.env)) {
+    if (key.startsWith('CLAUDE_PLUGIN_OPTION_') && value != null) env[key] = value;
+  }
+  return { ...env, ...overrides };
+}
+
 function runNode(args, options = {}) {
   return spawnSync(process.execPath, args, {
     cwd: options.cwd || process.cwd(),
     encoding: 'utf8',
     stdio: options.stdio || 'inherit',
-    env: options.env ? { ...process.env, ...options.env } : process.env,
+    env: childProcessEnv(options.env || {}),
   });
 }
 

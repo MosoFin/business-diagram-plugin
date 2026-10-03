@@ -3,7 +3,7 @@
   "diagram_type": "dataflow",
   "meta": {
     "title": "Northline Coffee — Stripe Payout Reconciliation to Chase 1002 (2026-07)",
-    "output": "northline-payout-rec.html",
+    "output": "out/northline-payout-rec.html",
     "viewBox": [
       1080,
       760

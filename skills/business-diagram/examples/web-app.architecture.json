@@ -3,7 +3,7 @@
   "diagram_type": "architecture",
   "meta": {
     "title": "Sample Web App",
-    "output": "web-app-rendered.html",
+    "output": "out/web-app-rendered.html",
     "quality_profile": "showcase",
     "views": [
       { "id": "request-path", "label": "Primary request path", "focus": ["users", "cdn", "lb", "api", "db"], "note": "Follow the primary customer request from the edge to durable state." },

@@ -17,6 +17,29 @@ const defaultStopGraceMs = 3000;
 const defaultStopKillMs = 750;
 const diagramTypes = new Set(['architecture', 'workflow', 'sequence', 'dataflow', 'lifecycle', 'pillars']);
 
+
+function childProcessEnv(overrides = {}) {
+  const allow = [
+    'PATH', 'PATHEXT', 'SYSTEMROOT', 'WINDIR', 'TMP', 'TEMP', 'TMPDIR',
+    'HOME', 'USERPROFILE', 'APPDATA', 'LOCALAPPDATA', 'PROGRAMFILES', 'PROGRAMFILES(X86)',
+    'LANG', 'LC_ALL', 'LC_CTYPE', 'TERM', 'COLORTERM',
+    'NODE_OPTIONS', 'NODE_PATH', 'NODE_EXTRA_CA_CERTS',
+    'MOSOFIN_QUALITY_PROFILE', 'MOSOFIN_DIAGNOSTIC_FORMAT', 'MOSOFIN_REPO_ROOT',
+    'MOSOFIN_BRAND_ALLOW_PRIVATE', 'MOSOFIN_BRAND_CAPTURE_TIMEOUT_MS',
+    'MOSOFIN_CHROME', 'MOSOFIN_CHROME_NO_SANDBOX',
+  ];
+  const env = {};
+  for (const key of allow) {
+    if (Object.prototype.hasOwnProperty.call(process.env, key) && process.env[key] != null) {
+      env[key] = process.env[key];
+    }
+  }
+  for (const [key, value] of Object.entries(process.env)) {
+    if (key.startsWith('CLAUDE_PLUGIN_OPTION_') && value != null) env[key] = value;
+  }
+  return { ...env, ...overrides };
+}
+
 function sha256(value) {
   return createHash('sha256').update(value).digest('hex');
 }
@@ -513,7 +536,7 @@ export async function startPreview(options) {
     let stderr = '';
     child = spawn(process.execPath, args, {
       cwd: options.cwd || process.cwd(),
-      env: process.env,
+      env: childProcessEnv(),
       stdio: ['ignore', 'pipe', 'pipe'],
       detached: process.platform !== 'win32',
     });

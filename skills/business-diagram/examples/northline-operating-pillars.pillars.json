@@ -3,7 +3,7 @@
   "diagram_type": "pillars",
   "meta": {
     "title": "Northline Coffee — How the business stands (as of 2026-07)",
-    "output": "northline-operating-pillars.html",
+    "output": "out/northline-operating-pillars.html",
     "quality_profile": "showcase",
     "views": [
       {

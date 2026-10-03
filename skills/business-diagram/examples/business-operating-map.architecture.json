@@ -3,7 +3,7 @@
   "diagram_type": "architecture",
   "meta": {
     "title": "How the business runs (2026-07)",
-    "output": "business-operating-map.html",
+    "output": "out/business-operating-map.html",
     "animation": "trace",
     "quality_profile": "showcase",
     "node_style": "logo",
