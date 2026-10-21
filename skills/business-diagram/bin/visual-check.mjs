@@ -621,7 +621,7 @@ export async function runVisualCheck({
     receipt.readability.status = 'skipped';
     receipt.viewerChrome.status = 'skipped';
     receipt.captures.status = 'skipped';
-    receipt.error = 'Chrome or Chromium is unavailable. Set the plugin chrome_path option (or MOSOFIN_CHROME) to its executable path.';
+    receipt.error = 'Chrome or Chromium is unavailable. Set the plugin chrome_path option to its executable path.';
     persistReceipt(outputs, receipt);
     return { exitCode: EXIT.skipped, receipt };
   }

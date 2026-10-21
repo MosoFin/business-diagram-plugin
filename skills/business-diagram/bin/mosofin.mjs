@@ -75,7 +75,6 @@ function childProcessEnv(overrides = {}) {
   if (process.env.MOSOFIN_REPO_ROOT != null) env.MOSOFIN_REPO_ROOT = process.env.MOSOFIN_REPO_ROOT;
   if (process.env.MOSOFIN_ALLOW_LAN_BRANDS != null) env.MOSOFIN_ALLOW_LAN_BRANDS = process.env.MOSOFIN_ALLOW_LAN_BRANDS;
   if (process.env.MOSOFIN_BRAND_CAPTURE_TIMEOUT_MS != null) env.MOSOFIN_BRAND_CAPTURE_TIMEOUT_MS = process.env.MOSOFIN_BRAND_CAPTURE_TIMEOUT_MS;
-  if (process.env.MOSOFIN_CHROME != null) env.MOSOFIN_CHROME = process.env.MOSOFIN_CHROME;
   if (process.env.MOSOFIN_CHROME_NO_SANDBOX != null) env.MOSOFIN_CHROME_NO_SANDBOX = process.env.MOSOFIN_CHROME_NO_SANDBOX;
   if (process.env.CLAUDE_PLUGIN_OPTION_CHROME_PATH != null) env.CLAUDE_PLUGIN_OPTION_CHROME_PATH = process.env.CLAUDE_PLUGIN_OPTION_CHROME_PATH;
   return { ...env, ...overrides };
