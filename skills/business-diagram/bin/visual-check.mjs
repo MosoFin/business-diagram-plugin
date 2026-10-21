@@ -102,12 +102,9 @@ function findOnPath(command, env, platform) {
 }
 
 function chromeLookupEnv(env = {}) {
-  // Chrome path comes from plugin user_config (CLAUDE_PLUGIN_OPTION_CHROME_PATH)
-  // or an explicit env object passed by tests — never from ambient shell secrets.
+  // An explicit Chrome path arrives only as MOSOFIN_CHROME in the env object
+  // the caller passes (the --chrome flag or tests) — never from the shell.
   const out = { ...env };
-  if (process.env.CLAUDE_PLUGIN_OPTION_CHROME_PATH && !Object.prototype.hasOwnProperty.call(out, 'MOSOFIN_CHROME')) {
-    out.MOSOFIN_CHROME = process.env.CLAUDE_PLUGIN_OPTION_CHROME_PATH;
-  }
   for (const key of ['PATH', 'PATHEXT', 'PROGRAMFILES', 'PROGRAMFILES(X86)', 'LOCALAPPDATA']) {
     if (out[key] == null && process.env[key] != null) out[key] = process.env[key];
   }
@@ -621,7 +618,7 @@ export async function runVisualCheck({
     receipt.readability.status = 'skipped';
     receipt.viewerChrome.status = 'skipped';
     receipt.captures.status = 'skipped';
-    receipt.error = 'Chrome or Chromium is unavailable. Set the plugin chrome_path option to its executable path.';
+    receipt.error = 'Chrome or Chromium is unavailable. Pass its executable path with --chrome <path>.';
     persistReceipt(outputs, receipt);
     return { exitCode: EXIT.skipped, receipt };
   }

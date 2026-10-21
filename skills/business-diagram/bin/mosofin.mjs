@@ -21,7 +21,7 @@ function usage() {
   mosofin validate <type> <input.json> [--json] [--layout-json] [--quality standard|showcase] [--repo-root path]
   mosofin inspect <type> <input.json>
   mosofin check <output.html>
-  mosofin visual-check <output.html> [--json]
+  mosofin visual-check <output.html> [--json] [--chrome path]
   mosofin guide [scenario or question] [--json] [--lang en]
   mosofin brands [name, alias, domain, or category] [--json]
   mosofin brands capture <url> [--json]
@@ -1187,22 +1187,33 @@ function commandCheck(args) {
 
 async function commandVisualCheck(args) {
   const json = args.includes('--json');
+  const chromeIndex = args.indexOf('--chrome');
+  const chrome = chromeIndex === -1 ? undefined : args[chromeIndex + 1];
+  if (chromeIndex !== -1 && (!chrome || chrome.startsWith('--'))) fail('--chrome needs the Chrome or Chromium executable path.', 1);
+  const rest = chromeIndex === -1 ? args : args.filter((_, index) => index !== chromeIndex && index !== chromeIndex + 1);
   const knownOptions = new Set(['--json']);
-  const unknown = args.filter((arg) => arg.startsWith('--') && !knownOptions.has(arg));
+  const unknown = rest.filter((arg) => arg.startsWith('--') && !knownOptions.has(arg));
   if (unknown.length) fail(`Unknown visual-check option "${unknown[0]}".`, 1);
-  const positional = args.filter((arg) => !knownOptions.has(arg));
+  const positional = rest.filter((arg) => !knownOptions.has(arg));
   if (positional.length !== 1) fail(usage(), 1);
 
   let runVisualCheck;
+  let findChrome;
   try {
-    ({ runVisualCheck } = await import('./visual-check.mjs'));
+    ({ runVisualCheck, findChrome } = await import('./visual-check.mjs'));
   } catch (error) {
     fail(`Could not load visual-check: ${error.message}`, 1);
   }
 
+  let chromePath;
+  if (chrome) {
+    chromePath = findChrome({ env: { MOSOFIN_CHROME: path.resolve(chrome) } });
+    if (!chromePath) fail(`--chrome is not an executable: ${chrome}`, 1);
+  }
+
   let result;
   try {
-    result = await runVisualCheck({ artifactPath: positional[0] });
+    result = await runVisualCheck({ artifactPath: positional[0], chromePath });
   } catch (error) {
     if (json) {
       console.log(JSON.stringify({
