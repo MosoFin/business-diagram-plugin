@@ -17,10 +17,22 @@ function evidenceFailure(code, message, { subject = {}, evidence = {}, supported
   }]);
 }
 
+function gitEnv() {
+  // Git only reads local objects here. Pass the minimum it needs to start and
+  // skip user/system config so no credential helper, remote URL, or token in
+  // the user's Git config is ever loaded.
+  const env = { GIT_CONFIG_NOSYSTEM: '1', GIT_CONFIG_GLOBAL: process.platform === 'win32' ? 'NUL' : '/dev/null', GIT_TERMINAL_PROMPT: '0' };
+  if (process.env.PATH != null) env.PATH = process.env.PATH;
+  if (process.env.PATHEXT != null) env.PATHEXT = process.env.PATHEXT;
+  if (process.env.SYSTEMROOT != null) env.SYSTEMROOT = process.env.SYSTEMROOT;
+  return env;
+}
+
 function runGit(repoRoot, args) {
   const result = spawnSync('git', ['-C', repoRoot, ...args], {
     encoding: 'utf8',
     maxBuffer: 16 * 1024 * 1024,
+    env: gitEnv(),
   });
   if (result.error) evidenceFailure('repository-evidence/git-unavailable', `Could not run Git: ${result.error.message}`, {
     evidence: { reason: result.error.message },
@@ -137,14 +149,8 @@ export function verifyRepositoryEvidence(diagramType, diagram, repoRootInput) {
       supportedFixes: [`pass --repo-root ${gitRoot}`],
     });
   }
-  const origin = gitValue(realRoot, ['remote', 'get-url', 'origin'], 'Evidence repository must have an origin remote.');
-  if (githubSlug(origin) !== authoredSlug) {
-    evidenceFailure('repository-evidence/origin-mismatch', `Evidence repository origin ${JSON.stringify(origin)} does not match ${JSON.stringify(repository.url)}.`, {
-      subject: { repoRoot: realRoot },
-      evidence: { localOrigin: origin, authoredRepository: repository.url },
-      supportedFixes: ['use the matching local checkout or correct the authored repository URL'],
-    });
-  }
+  // The local remote URL is deliberately not read: it can embed an access
+  // token. The pinned full commit SHA below identifies the checked-out content.
 
   const revision = repository.revision.toLowerCase();
   const commit = runGit(realRoot, ['cat-file', '-e', `${revision}^{commit}`]);
