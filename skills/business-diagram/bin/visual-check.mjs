@@ -105,7 +105,9 @@ function chromeLookupEnv(env = {}) {
   // An explicit Chrome path arrives only as MOSOFIN_CHROME in the env object
   // the caller passes (the --chrome flag or tests) — never from the shell.
   const out = { ...env };
-  for (const key of ['PATH', 'PATHEXT', 'PROGRAMFILES', 'PROGRAMFILES(X86)', 'LOCALAPPDATA']) {
+  // LOCALAPPDATA is not read: it also holds browser profile and credential
+  // stores. A per-user Chrome install is passed with --chrome <path>.
+  for (const key of ['PATH', 'PATHEXT', 'PROGRAMFILES', 'PROGRAMFILES(X86)']) {
     if (out[key] == null && process.env[key] != null) out[key] = process.env[key];
   }
   return out;
@@ -125,7 +127,7 @@ export function findChrome({ env, platform = process.platform } = {}) {
       '/Applications/Chromium.app/Contents/MacOS/Chromium',
     );
   } else if (platform === 'win32') {
-    for (const root of [env.PROGRAMFILES, env['PROGRAMFILES(X86)'], env.LOCALAPPDATA].filter(Boolean)) {
+    for (const root of [env.PROGRAMFILES, env['PROGRAMFILES(X86)']].filter(Boolean)) {
       fixed.push(
         path.join(root, 'Google', 'Chrome', 'Application', 'chrome.exe'),
         path.join(root, 'Chromium', 'Application', 'chrome.exe'),
