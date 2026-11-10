@@ -2,7 +2,7 @@
 
 Read this **before** choosing a diagram type or writing JSON. It is the map from a real question to the picture in `examples/` and the visual treatment that picture ships. Tiny 3–4 node samples are not scenarios. Do not copy a spec's company, amounts, or IDs; copy type, density, and the visual fields below.
 
-`node bin/mosofin.mjs guide "<question>" --json` may break a tie on **type**. For preset, logo/box, and motion, this file wins. `recipes/scenarios.mjs` `presentation` is wrong in the three rows marked under Disagreements.
+`node <generator>/bin/mosofin.mjs guide "<question>" --json` may break a tie on **type**. For preset, logo/box, and motion, this file wins. The `presentation` that `guide` returns is wrong in the three rows marked under Disagreements.
 
 ## How to apply a match
 

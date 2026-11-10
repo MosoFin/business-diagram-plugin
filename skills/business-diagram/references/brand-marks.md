@@ -10,11 +10,11 @@ Many nodes have no logo to show: suppliers, a warehouse or 3PL, the controller,
 a legal entity, truth rules. Some real products have no openly licensed mark in
 the catalogue either (NetSuite, Ramp). Never draw, trace or borrow a logo for
 them. Set `icon` to a **domain icon** instead, a business pictogram from the
-curated Lucide set (ISC licence, shipped in `domain-icons/`):
+curated Lucide set (ISC licence):
 
 ```bash
-node bin/mosofin.mjs icons --json
-node bin/mosofin.mjs icons warehouse
+node <generator>/bin/mosofin.mjs icons --json
+node <generator>/bin/mosofin.mjs icons warehouse
 ```
 
 ```json
@@ -32,7 +32,7 @@ components and pillars (pillars and foundation blocks) accept `icon`.
 1. Search the built-in catalogue when the request names a recognizable brand:
 
    ```bash
-   node bin/mosofin.mjs brands "Claude" --json
+   node <generator>/bin/mosofin.mjs brands "Claude" --json
    ```
 
 2. Put the returned canonical ID in the node, participant, or state:
@@ -59,7 +59,7 @@ bundle. Each plate is
 `https://raw.githubusercontent.com/MosoFin/mosofin-diagram/main/docs/design-handoff/assets/brand-marks/catalog/<id>.svg`
 and the opened diagram loads that SVG.
 
-Use `node bin/mosofin.mjs brands --json` to inspect all canonical IDs, aliases,
+Use `node <generator>/bin/mosofin.mjs brands --json` to inspect all canonical IDs, aliases,
 categories, domains, and provenance. Current categories cover AI, cloud,
 engineering, data, collaboration, business systems, channels, languages, and
 frameworks.

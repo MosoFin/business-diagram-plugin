@@ -5,7 +5,7 @@
 Use `validate` after every candidate edit. Use final atomic delivery only after the candidate is frozen:
 
 ```bash
-node bin/mosofin.mjs deliver <type> <candidate.json> <output.html> --quality showcase --json
+node <generator>/bin/mosofin.mjs deliver <type> <candidate.json> <output.html> --quality showcase --json
 ```
 
 Deliver reads the specification once, writes those exact bytes to a private same-directory candidate snapshot, renders that snapshot, runs the complete artifact checker, and only replaces the target after all artifact checks pass. The JSON receipt includes SHA-256 and byte counts for both `specification` and `artifact`. Renderer, checker, receipt, or commit failure exits non-zero, removes private state, preserves the previous trusted artifact, and never invokes an opener.
@@ -18,7 +18,7 @@ After delivery, inspect the exact trusted HTML without rerendering or modifying
 it:
 
 ```bash
-node bin/mosofin.mjs visual-check <output.html> --json
+node <generator>/bin/mosofin.mjs visual-check <output.html> --json
 ```
 
 The zero-dependency command uses Chrome/Chromium through the DevTools pipe. It
