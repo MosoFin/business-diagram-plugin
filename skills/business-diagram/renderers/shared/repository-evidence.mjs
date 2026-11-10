@@ -2,6 +2,7 @@ import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { throwDiagnosticError } from './diagnostics.mjs';
+import { programLookupEnv } from './system-env.mjs';
 
 const FULL_SHA_RE = /^[a-f0-9]{40}$/i;
 const CONTROL_CHARACTER_RE = /[\u0000-\u001f\u007f]/;
@@ -18,14 +19,14 @@ function evidenceFailure(code, message, { subject = {}, evidence = {}, supported
 }
 
 function gitEnv() {
-  // Git only reads local objects here. Pass the minimum it needs to start and
-  // skip user/system config so no credential helper, remote URL, or token in
-  // the user's Git config is ever loaded.
-  const env = { GIT_CONFIG_NOSYSTEM: '1', GIT_CONFIG_GLOBAL: process.platform === 'win32' ? 'NUL' : '/dev/null', GIT_TERMINAL_PROMPT: '0' };
-  if (process.env.PATH != null) env.PATH = process.env.PATH;
-  if (process.env.PATHEXT != null) env.PATHEXT = process.env.PATHEXT;
-  if (process.env.SYSTEMROOT != null) env.SYSTEMROOT = process.env.SYSTEMROOT;
-  return env;
+  // Git only reads local objects here. It starts with the program-lookup
+  // variables and skips user and system Git configuration.
+  return {
+    ...programLookupEnv(),
+    GIT_CONFIG_NOSYSTEM: '1',
+    GIT_CONFIG_GLOBAL: process.platform === 'win32' ? 'NUL' : '/dev/null',
+    GIT_TERMINAL_PROMPT: '0',
+  };
 }
 
 function runGit(repoRoot, args) {
@@ -149,8 +150,8 @@ export function verifyRepositoryEvidence(diagramType, diagram, repoRootInput) {
       supportedFixes: [`pass --repo-root ${gitRoot}`],
     });
   }
-  // The local remote URL is deliberately not read: it can embed an access
-  // token. The pinned full commit SHA below identifies the checked-out content.
+  // The local remote is deliberately not consulted. The pinned full commit SHA
+  // below identifies the checked-out content.
 
   const revision = repository.revision.toLowerCase();
   const commit = runGit(realRoot, ['cat-file', '-e', `${revision}^{commit}`]);

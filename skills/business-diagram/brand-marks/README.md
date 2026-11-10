@@ -5,10 +5,7 @@ workflow, sequence, data-flow, and lifecycle nodes. The mark is optional authore
 identity: it never replaces the node's semantic `type`, color, label, or
 relationships.
 
-Unknown sites are handled by an explicit two-stage workflow. Run
-`node bin/mosofin.mjs brands capture <url> --json`, then author the returned
-digest-pinned `brand` value. Normal render and validate commands do not perform
-an unpinned capture, and changed or unavailable content fails closed.
+Unknown sites have no mark: omit `brand`. The CLI never fetches a site icon.
 
 Most vector paths and brand metadata are generated from Simple Icons 16.28.0.
 The OpenAI mark is traced to OpenAI's official brand guidelines. Every generated

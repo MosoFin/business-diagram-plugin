@@ -106,13 +106,10 @@ reordering. ID-less documents remain valid and their relationship pins stay
 local to the current page.
 
 Every semantic node collection (`components`, `nodes`, `participants`, and
-`states`) also accepts one optional `brand`: either a canonical string returned
-by `mosofin brands --json`, or a digest-pinned `{ "url", "sha256" }` object
-returned by `mosofin brands capture <url> --json`. Known IDs and known-brand
-domains use the bundled vector catalogue. Unknown URLs must be captured in that
-explicit command before authoring; render and validate never perform an
-unpinned network capture. Unsafe, unavailable, changed, or unsupported content
-fails closed with a brand diagnostic. Omitted `brand` preserves the prior
+`states`) also accepts one optional `brand`: a canonical string returned by
+`mosofin brands --json`, or a website link whose domain belongs to a built-in
+brand. Both resolve to the bundled vector catalogue; nothing is fetched. An
+unknown brand fails with a brand diagnostic. Omitted `brand` preserves the prior
 output.
 
 ## schema_version policy

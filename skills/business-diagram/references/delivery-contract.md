@@ -38,18 +38,6 @@ image/contact-sheet sidecars rather than presenting prior evidence as current.
 
 Add `--open` only when the user wants an immediate local preview. It runs after that atomic commit, uses one argument-array OS opener with a five-second bound, and records `open.status`. Keep it off for CI, unattended agents, and non-interactive environments. Failure or unsupported opening does not invalidate delivery; its status proves only whether the local opener invocation succeeded.
 
-## Last-Good Live Preview
-
-For an active desktop authoring loop only:
-
-```bash
-node bin/mosofin.mjs preview <type> <input>.json <output>.html --quality showcase
-```
-
-Preview watches one explicit input on loopback, binds each stable digest to a private snapshot, and advances only after the existing verified delivery pipeline passes. Invalid, half-written, deleted, or superseded input leaves the previous verified revision on screen and on disk. Identical bytes do not rebuild or reload.
-
-Never start it by default. Do not use it for CI, unattended agents, remote sharing, or mobile use. `--no-open` is only for a user who will open the printed local URL or for loop testing. Stop it with Ctrl-C before handoff. Server state, port, source path, diagnostics, error text, and reload tokens must never enter the generated artifact or any export.
-
 ## Perceptual delivery gate
 
 Automated validation cannot prove visual polish. After deterministic delivery, inspect the actual HTML in a capable browser or render a screenshot with an image reader. Check both themes when changed, the default READ view, line crossings/corridors, label masks, node/card fit, focus/search/passport closure, and export cleanliness.
@@ -80,4 +68,4 @@ visual_review: passed|skipped (image reader unavailable)|failed
 correction_rounds: 0|1|2
 ```
 
-Opening, preview status, Share Cards, and other viewer exports are not validation claims.
+Opening, Share Cards, and other viewer exports are not validation claims.

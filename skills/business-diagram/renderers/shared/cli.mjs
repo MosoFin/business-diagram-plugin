@@ -9,6 +9,7 @@ import { resolveOutputPath } from './output-path.mjs';
 import { prepareDiagramBrandMarks } from './brand-marks.mjs';
 import { validateDomainIcons } from './domain-icons.mjs';
 import { resolveLocale, translateMessage } from './i18n.mjs';
+import { RUN_OPTIONS } from './system-env.mjs';
 
 installRendererDiagnosticBoundary();
 
@@ -26,7 +27,7 @@ export function loadDiagram({ rendererDir, diagramType, defaultExample, argv = p
   validateRelationshipIds(diagramType, diagram);
   validateEngineeringProfile(diagramType, diagram);
   validateDomainIcons(diagramType, semanticNodesWithPaths(diagramType, diagram));
-  const sourceEvidence = verifyRepositoryEvidence(diagramType, diagram, process.env.MOSOFIN_REPO_ROOT);
+  const sourceEvidence = verifyRepositoryEvidence(diagramType, diagram, RUN_OPTIONS.repoRoot || undefined);
   const template = fs.readFileSync(path.join(skillRoot, 'assets/template.html'), 'utf8');
   // Optional chaining: in degraded mode (no ajv) malformed input must still
   // reach the renderer's friendly layout checks instead of crashing here.
@@ -42,9 +43,8 @@ export function loadDiagram({ rendererDir, diagramType, defaultExample, argv = p
   return { diagram, template, outPath, sourceEvidence };
 }
 
-// Brand URL capture is the only asynchronous authoring step. Typed renderers
-// opt into it through this wrapper without changing loadDiagram's long-lived
-// synchronous safety contract.
+// Brand marks resolve against the bundled catalogue only. Typed renderers opt
+// into them through this wrapper without changing loadDiagram's contract.
 export async function loadDiagramWithBrandMarks(options) {
   const loaded = loadDiagram(options);
   await prepareDiagramBrandMarks(options.diagramType, loaded.diagram);
@@ -201,7 +201,7 @@ export function svgRootAttrs(meta, kind) {
   const engineeringProfile = meta.engineering_profile
     ? ` data-engineering-profile="${esc(meta.engineering_profile)}"`
     : '';
-  const requestedProfile = process.env.MOSOFIN_QUALITY_PROFILE || meta.quality_profile;
+  const requestedProfile = RUN_OPTIONS.qualityProfile || meta.quality_profile;
   const qualityProfile = requestedProfile === 'showcase' ? 'showcase' : 'standard';
   const advisory = requestedProfile ? '' : ' data-quality-gates="advisory"';
   return `role="img" lang="${esc(resolveLocale(meta.locale))}" aria-labelledby="mosofin-diagram-title mosofin-diagram-description"${animation}${preset}${engineeringProfile} data-quality-profile="${esc(qualityProfile)}"${advisory}`;
