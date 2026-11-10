@@ -150,7 +150,7 @@ chapters), not extra nodes.
 If the sentence is still ambiguous after this table, run:
 
 ```bash
-node bin/mosofin.mjs guide "<their sentence>" --json
+node <generator>/bin/mosofin.mjs guide "<their sentence>" --json
 ```
 
 ### D. As-of date, audience, amounts

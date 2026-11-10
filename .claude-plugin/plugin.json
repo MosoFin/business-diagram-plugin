@@ -1,8 +1,8 @@
 {
   "name": "business-diagram",
   "displayName": "Business Diagram",
-  "version": "1.0.3",
-  "description": "Generates a validated business or software diagram (architecture, workflow, sequence, data flow, lifecycle, or operating pillars) from this plugin. Docs at https://diagram.mosofin.com. Upstream project: MosoFin/mosofin-diagram.",
+  "version": "1.1.0",
+  "description": "Generates a validated business or software diagram (architecture, workflow, sequence, data flow, lifecycle, or operating pillars) using the open-source mosofin generator. Docs at https://diagram.mosofin.com. Upstream project: MosoFin/mosofin-diagram.",
   "author": {
     "name": "MosoFin",
     "url": "https://diagram.mosofin.com"

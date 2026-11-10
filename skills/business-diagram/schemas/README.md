@@ -145,12 +145,8 @@ stays in `lifecycle.schema.json`.
 
 ## Runtime validation
 
-At development time, `scripts/generate-validators.mjs` compiles all five
-schemas with ajv's draft 2020-12 standalone generator using `strict: true` and
-`allErrors: true`. The generated `renderers/shared/generated-validators.mjs`
-is committed and shipped with the skill, so runtime validation has no npm or
-network dependency. `renderers/shared/validator.mjs` applies the matching
-standalone validator before the renderer's own layout checks.
+The CLI validates each document against the matching schema before the
+renderer's own layout checks.
 The shared loader then checks cross-collection facts that JSON Schema cannot
 express cleanly here: duplicate view IDs, duplicate focus IDs, focus IDs that do
 not exist in the diagram's semantic collection, and duplicate authored
@@ -185,9 +181,6 @@ must name the real crossing mechanism in `label`.
 The profile validates only authored IR. It does not discover infrastructure,
 infer owners, or prove that a diagram matches a live environment. If a fact is
 unknown, leave the profile unset or obtain the fact instead of inventing it.
-
-`npm test` runs the generator in check mode and fails when the committed
-validators drift from their schemas.
 
 ## Error format
 

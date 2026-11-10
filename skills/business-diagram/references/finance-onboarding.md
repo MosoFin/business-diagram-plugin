@@ -138,7 +138,7 @@ close workflow).
 If the sentence is still ambiguous after this table, run:
 
 ```bash
-node bin/mosofin.mjs guide "<their sentence>" --json
+node <generator>/bin/mosofin.mjs guide "<their sentence>" --json
 ```
 
 Use the recommendation's `type` and `prompt`. Finance recipes are routing

@@ -1,10 +1,10 @@
 # Business Diagram plugin
 
-This repository is the Claude directory submission. It contains a plugin that generates a validated business or software diagram on its own. The generator, schemas, renderer, and small examples live in `skills/business-diagram/`.
+This repository is the Claude directory submission. It contains a plugin that teaches Claude to produce a validated business or software diagram. The plugin is instructions and data only: the skill, its reference documents, the JSON schemas, and small examples live in `skills/business-diagram/`.
 
 Published diagrams and docs: https://diagram.mosofin.com
 
-[MosoFin/mosofin-diagram](https://github.com/MosoFin/mosofin-diagram) remains the full project. That repository keeps the large generated example HTML, the committed viewer template, and the other built files that make a directory scan time out. This plugin does not commit those files. It rebuilds the ones the CLI needs from smaller sources already in `skills/business-diagram/` (see that folder's `SKILL.md`).
+The generator program lives in [MosoFin/mosofin-diagram](https://github.com/MosoFin/mosofin-diagram). The skill has Claude fetch it once at a pinned commit and run it locally; `skills/business-diagram/README.md` lists exactly what is downloaded, run, read, and sent.
 
 ## Directory submission
 
@@ -17,4 +17,4 @@ Submit this repository, not `mosofin-diagram`.
 ## What is here
 
 - `.claude-plugin/plugin.json` is the plugin manifest. `skills` points at `./skills/business-diagram`.
-- `skills/business-diagram/` is the generator: `SKILL.md`, `bin/`, `schemas/`, `renderers/`, `references/`, and small JSON examples.
+- `skills/business-diagram/` is the skill: `SKILL.md`, `schemas/`, `references/`, and small JSON examples. It holds no program; `SKILL.md` has Claude fetch the generator from `mosofin-diagram` at a pinned commit.
