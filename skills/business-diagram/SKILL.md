@@ -75,7 +75,7 @@ Read Mermaid for topology and meaning, then author fresh Mosofin JSON; do not me
 - Omit `meta.legend` for the truthful `auto` default. When needed, use only `mode: auto|all|hidden` and renderer-supported `entries.<kind>.label|visible`; labels never change semantics.
 - Choose one primary authored language from an explicit user choice; otherwise follow the request or conversation's dominant language. `meta.locale` controls only renderer-owned Viewer UI and accepts `"en"` only. For any other requested language, omit `meta.locale` and explicitly disclose that the fixed Viewer UI and `<html lang>` remain English. The renderer never translates authored content. See `references/authoring-contract.md` for details.
 - Preserve exact product names, code identifiers, commands, protocols, API paths, and environment names. They may remain English inside localized copy, but never justify leaving the surrounding explanatory prose in another language.
-- Brand identity is optional and explicit. Put a canonical built-in ID in `brand` when the node names that real product. If no preset matches and the user supplied the official HTTP(S) URL, first run `node bin/mosofin.mjs brands capture "<url>" --json`, then author the returned digest-pinned `brand` object. Render and validate never perform an unpinned capture. Otherwise omit `brand`. Never infer a brand from a vague role such as "database", and never let a badge replace the semantic `type`, label, or relationship facts.
+- Brand identity is optional and explicit. Put a canonical built-in ID in `brand` when the node names that real product. If no preset matches, omit `brand`; the CLI never fetches a site icon. Never infer a brand from a vague role such as "database", and never let a badge replace the semantic `type`, label, or relationship facts.
 - A node with no brand mark (a supplier, warehouse, controller, legal entity, or a product with no openly licensed mark such as NetSuite or Ramp) may set `icon` to a domain pictogram from `node bin/mosofin.mjs icons --json` in architecture and pillars diagrams. It draws in the node's semantic colour in logo mode and in the corner badge in box mode. A brand mark always wins; never use an icon to imitate a vendor logo, and keep the product name in the sublabel.
 - For sequence diagrams, omit `meta.column_fit` for the stable `fixed` layout. Set it to `"spread"` when a wide viewBox would otherwise leave unused horizontal space or when meaningful participant labels do not fit the fixed boxes; do not shorten semantic labels before trying `spread`.
 - Component types are `frontend`, `backend`, `database`, `cloud`, `security`, `messagebus`, and `external`; variants are `default`, `emphasis`, `security`, and `dashed`.
@@ -100,13 +100,7 @@ node bin/mosofin.mjs visual-check <output.html> --json
 
 `visual-check` measures containment at 1440×900, 1600×1000, 1920×1080, and 2048×1320; captures light/dark screenshots at the smallest and largest sizes; and writes a relative-path contact sheet plus JSON sidecars beside the artifact. Its automated receipt always reports `visualReview: "pending"`: screenshots are evidence for inspection, never an automatic polish claim. Exit 0 means containment and captures passed, 1 means overflow or capture failure, and 2 means Chrome/Chromium was unavailable and the receipt is `skipped`. The command never changes the delivered HTML.
 
-Add `--open` only when the user wants an immediate local preview. For an active desktop authoring loop, the optional command is:
-
-```bash
-node bin/mosofin.mjs preview <type> <input>.json <output>.html --quality showcase
-```
-
-Never start preview by default. Read `references/delivery-contract.md` when using preview, repository evidence, export receipts, visual review, or post-commit opening.
+Add `--open` only when the user wants the finished file opened locally. Read `references/delivery-contract.md` when using repository evidence, export receipts, visual review, or post-commit opening.
 
 ## Optional viewer capabilities
 
@@ -125,7 +119,7 @@ node bin/mosofin.mjs doctor
 node bin/mosofin.mjs demo <output-directory>
 ```
 
-`npm run prepare` assembles `assets/template.html` and writes `renderers/shared/generated-validators.mjs` and `renderers/shared/generated-brand-marks.mjs`. `npm install` is only for those generators. After that, validation and rendering make no network calls. Preset logos are not copied into this plugin: the HTML references `https://raw.githubusercontent.com/MosoFin/mosofin-diagram/main/docs/design-handoff/assets/brand-marks/catalog/<id>.svg`, and the browser loads that plate when the diagram is opened. Optional visual-check screenshots find Chrome in standard install locations or take `--chrome <path>` — never read Chrome or other secrets from the user's shell environment, keychain, or config files. Comprehensive example specs live in `examples/`; their `meta.output` paths mean generate into plugin `out/` locally and do not commit the HTML. If a shell is unavailable, stop and say so. Do not hand-write HTML; the validated artifact comes from this CLI. Read `references/delivery-contract.md` for the visual review contract.
+`npm run prepare` assembles `assets/template.html` and writes `renderers/shared/generated-validators.mjs` and `renderers/shared/generated-brand-marks.mjs`. `npm install` is only for those generators. After that, the CLI makes no network calls. Preset logos are not copied into this plugin: the HTML references `https://raw.githubusercontent.com/MosoFin/mosofin-diagram/main/docs/design-handoff/assets/brand-marks/catalog/<id>.svg`, and the browser loads that plate when the diagram is opened. Optional visual-check screenshots find Chrome in standard install locations or take `--chrome <path>` — never read Chrome or other secrets from the user's shell environment, keychain, or config files. Comprehensive example specs live in `examples/`; their `meta.output` paths mean generate into plugin `out/` locally and do not commit the HTML. If a shell is unavailable, stop and say so. Do not hand-write HTML; the validated artifact comes from this CLI. Read `references/delivery-contract.md` for the visual review contract.
 
 ## Output
 

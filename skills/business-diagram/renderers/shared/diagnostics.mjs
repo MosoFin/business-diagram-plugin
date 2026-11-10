@@ -1,7 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { RUN_OPTIONS } from './system-env.mjs';
 
-const DIAGNOSTIC_MODE = process.env.MOSOFIN_DIAGNOSTIC_FORMAT === 'json';
+const DIAGNOSTIC_MODE = RUN_OPTIONS.diagnosticJson;
 const recorded = [];
 const recordedMessages = new Set();
 const boundaryKey = Symbol.for('mosofin.renderer-diagnostic-boundary');

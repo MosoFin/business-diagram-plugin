@@ -68,20 +68,3 @@ function launchTarget(target, options = {}) {
 export function openArtifact(target, options = {}) {
   return launchTarget(path.resolve(target), options);
 }
-
-export function openLoopbackUrl(target, options = {}) {
-  let url;
-  try {
-    url = new URL(target);
-  } catch {
-    throw new TypeError('Preview URL must be a valid loopback HTTP URL.');
-  }
-  if (url.protocol !== 'http:' || url.hostname !== '127.0.0.1' || !url.port) {
-    throw new TypeError('Preview URL must be a loopback URL using http://127.0.0.1:<port>.');
-  }
-  const authority = /^[a-z][a-z0-9+.-]*:\/\/([^/?#]*)/i.exec(String(url.href || ''));
-  if ((authority && authority[1].includes('@')) || url.pathname !== '/' || url.search || url.hash) {
-    throw new TypeError('Preview URL must target the loopback preview root.');
-  }
-  return launchTarget(url.href, options);
-}

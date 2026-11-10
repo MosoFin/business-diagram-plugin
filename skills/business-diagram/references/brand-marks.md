@@ -46,43 +46,18 @@ components and pillars (pillars and foundation blocks) accept `icon`.
    }
    ```
 
-3. If there is no catalogue match and the user supplied the official website,
-   capture its icon explicitly:
+3. If there is no catalogue match, omit `brand`. Do not invent a URL or
+   silently assign a visually similar company. An architecture or pillars node
+   may set a domain `icon` instead.
 
-   ```bash
-   node bin/mosofin.mjs brands capture "https://partner.example.com" --json
-   ```
-
-   Put the command's digest-pinned `brand` value in the authored node:
-
-   ```json
-   {
-     "id": "partner",
-     "type": "external",
-     "label": "Partner portal",
-     "brand": {
-       "url": "https://partner.example.com",
-       "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-     }
-   }
-   ```
-
-4. If there is no match and no user-provided URL, omit `brand`. Do not invent a
-   URL or silently assign a visually similar company.
-
-Known-brand URLs resolve to the bundled vector instead of using the network.
-Unknown URL capture accepts only bounded raster image formats, blocks
-credentials, nonstandard public ports, and private or link-local destinations,
-uses bounded concurrency and one total deadline, and returns the captured
-content digest. Later render and validate operations require that exact digest;
-blocked, unavailable, changed, oversized, or unsafe content fails closed instead
-of silently changing the artifact.
+A website link is accepted only when its domain belongs to a built-in brand, and
+it resolves to that bundled vector. The CLI never fetches a site icon and opens
+no network connection.
 
 Preset marks in the artifact point at MosoFin/mosofin-diagram, not a vendored
 bundle. Each plate is
 `https://raw.githubusercontent.com/MosoFin/mosofin-diagram/main/docs/design-handoff/assets/brand-marks/catalog/<id>.svg`
-and the opened diagram loads that SVG. Digest-verified captured site icons stay
-embedded.
+and the opened diagram loads that SVG.
 
 Use `node bin/mosofin.mjs brands --json` to inspect all canonical IDs, aliases,
 categories, domains, and provenance. Current categories cover AI, cloud,

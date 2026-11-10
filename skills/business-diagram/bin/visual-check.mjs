@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { MIN_PROJECTED_NODE_TEXT_PX } from '../renderers/shared/desktop-readability.mjs';
+import { programLookupEnv } from '../renderers/shared/system-env.mjs';
 
 export const VISUAL_CHECK_VIEWPORTS = Object.freeze([
   Object.freeze({ width: 1440, height: 900 }),
@@ -102,15 +103,10 @@ function findOnPath(command, env, platform) {
 }
 
 function chromeLookupEnv(env = {}) {
-  // An explicit Chrome path arrives only as MOSOFIN_CHROME in the env object
-  // the caller passes (the --chrome flag or tests) — never from the shell.
-  const out = { ...env };
-  // LOCALAPPDATA is not read: it also holds browser profile and credential
-  // stores. A per-user Chrome install is passed with --chrome <path>.
-  for (const key of ['PATH', 'PATHEXT', 'PROGRAMFILES', 'PROGRAMFILES(X86)']) {
-    if (out[key] == null && process.env[key] != null) out[key] = process.env[key];
-  }
-  return out;
+  // An explicit Chrome path arrives only as MOSOFIN_CHROME in the object the
+  // caller passes (the --chrome flag). A per-user Windows install outside
+  // Program Files is passed with --chrome <path>.
+  return { ...programLookupEnv(), ...env };
 }
 
 export function findChrome({ env, platform = process.platform } = {}) {

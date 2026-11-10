@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { childBaseEnv } from '../renderers/shared/system-env.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const skillRoot = path.resolve(__dirname, '..');
@@ -17,14 +18,12 @@ function usage() {
   mosofin render <type> <input.json> [output.html] [--quality standard|showcase] [--repo-root path]
   mosofin compare architecture <base.json> <head.json> [output.html] [--receipt path] [--json] [--quality standard|showcase] [--repo-root path]
   mosofin deliver <type> <input.json> [output.html] [--json] [--open] [--quality standard|showcase] [--repo-root path]
-  mosofin preview <type> <input.json> [output.html] [--no-open] [--quality standard|showcase] [--repo-root path]
   mosofin validate <type> <input.json> [--json] [--layout-json] [--quality standard|showcase] [--repo-root path]
   mosofin inspect <type> <input.json>
   mosofin check <output.html>
   mosofin visual-check <output.html> [--json] [--chrome path]
   mosofin guide [scenario or question] [--json] [--lang en]
   mosofin brands [name, alias, domain, or category] [--json]
-  mosofin brands capture <url> [--json]
   mosofin icons [domain, role, or alias] [--json]
   mosofin examples
   mosofin doctor
@@ -49,25 +48,7 @@ function rendererPath(type) {
 
 
 function childProcessEnv(overrides = {}) {
-  const env = {};
-  if (process.env.PATH != null) env.PATH = process.env.PATH;
-  if (process.env.PATHEXT != null) env.PATHEXT = process.env.PATHEXT;
-  if (process.env.SYSTEMROOT != null) env.SYSTEMROOT = process.env.SYSTEMROOT;
-  if (process.env.WINDIR != null) env.WINDIR = process.env.WINDIR;
-  if (process.env.TMP != null) env.TMP = process.env.TMP;
-  if (process.env.TEMP != null) env.TEMP = process.env.TEMP;
-  if (process.env.TMPDIR != null) env.TMPDIR = process.env.TMPDIR;
-  if (process.env.LANG != null) env.LANG = process.env.LANG;
-  if (process.env.LC_ALL != null) env.LC_ALL = process.env.LC_ALL;
-  if (process.env.LC_CTYPE != null) env.LC_CTYPE = process.env.LC_CTYPE;
-  if (process.env.TERM != null) env.TERM = process.env.TERM;
-  if (process.env.COLORTERM != null) env.COLORTERM = process.env.COLORTERM;
-  if (process.env.MOSOFIN_QUALITY_PROFILE != null) env.MOSOFIN_QUALITY_PROFILE = process.env.MOSOFIN_QUALITY_PROFILE;
-  if (process.env.MOSOFIN_DIAGNOSTIC_FORMAT != null) env.MOSOFIN_DIAGNOSTIC_FORMAT = process.env.MOSOFIN_DIAGNOSTIC_FORMAT;
-  if (process.env.MOSOFIN_REPO_ROOT != null) env.MOSOFIN_REPO_ROOT = process.env.MOSOFIN_REPO_ROOT;
-  if (process.env.MOSOFIN_ALLOW_LAN_BRANDS != null) env.MOSOFIN_ALLOW_LAN_BRANDS = process.env.MOSOFIN_ALLOW_LAN_BRANDS;
-  if (process.env.MOSOFIN_BRAND_CAPTURE_TIMEOUT_MS != null) env.MOSOFIN_BRAND_CAPTURE_TIMEOUT_MS = process.env.MOSOFIN_BRAND_CAPTURE_TIMEOUT_MS;
-  return { ...env, ...overrides };
+  return { ...childBaseEnv(), ...overrides };
 }
 
 function runNode(args, options = {}) {
@@ -1145,39 +1126,6 @@ async function commandDeliver(args) {
   }
 }
 
-async function commandPreview(args) {
-  const qualityArgs = extractQualityArgs(args);
-  const repoArgs = extractRepoRootArgs(qualityArgs.rest);
-  const noOpen = repoArgs.rest.includes('--no-open');
-  const knownOptions = new Set(['--no-open']);
-  const unknown = repoArgs.rest.filter((arg) => arg.startsWith('--') && !knownOptions.has(arg));
-  if (unknown.length) fail(`Unknown preview option "${unknown[0]}".`);
-  const positional = repoArgs.rest.filter((arg) => !knownOptions.has(arg));
-  const [type, input, output] = positional;
-  if (!type || !input || positional.length > 3) fail(usage());
-  assertEvidenceType(type, repoArgs.repoRoot);
-  rendererPath(type);
-
-  let runPreview;
-  try {
-    ({ runPreview } = await import('./preview.mjs'));
-  } catch (error) {
-    fail(`Could not load live preview: ${error.message}`, 1);
-  }
-  try {
-    await runPreview({
-      type,
-      input,
-      output,
-      quality: qualityArgs.quality,
-      repoRoot: repoArgs.repoRoot,
-      open: !noOpen,
-    });
-  } catch (error) {
-    fail(`Could not start live preview: ${error.message}`, 1);
-  }
-}
-
 function commandCheck(args) {
   const [html] = args;
   if (!html) fail(usage());
@@ -1273,13 +1221,6 @@ async function commandDoctor() {
     label: 'Example renderer',
     ok: fs.existsSync(examplesRenderer),
     missing: fs.existsSync(examplesRenderer) ? 0 : 1,
-  });
-
-  const previewRuntime = path.join(skillRoot, 'bin/preview.mjs');
-  checks.push({
-    label: 'Live preview runtime',
-    ok: fs.existsSync(previewRuntime),
-    missing: fs.existsSync(previewRuntime) ? 0 : 1,
   });
 
   const visualCheckRuntime = path.join(skillRoot, 'bin/visual-check.mjs');
@@ -1449,30 +1390,6 @@ async function commandBrands(args) {
   const unknown = args.filter((arg) => arg.startsWith('--') && arg !== '--json');
   if (unknown.length) fail(`Unknown brands option "${unknown[0]}".`);
   const positional = args.filter((arg) => arg !== '--json');
-  if (positional[0] === 'capture') {
-    if (positional.length !== 2) fail('Usage: mosofin brands capture <url> [--json]');
-    const { captureBrandReference } = await import('../renderers/shared/brand-marks.mjs');
-    let capture;
-    try {
-      capture = await captureBrandReference(positional[1]);
-    } catch (error) {
-      fail(error.message);
-    }
-    const result = {
-      schemaVersion: 1,
-      ok: true,
-      command: 'brands capture',
-      brand: capture.brand,
-      evidence: {
-        status: capture.resolved.status,
-        source: capture.resolved.sourceUrl,
-        ...(capture.resolved.sha256 ? { sha256: capture.resolved.sha256 } : {}),
-        ...(capture.resolved.contentType ? { contentType: capture.resolved.contentType } : {}),
-      },
-    };
-    console.log(json ? JSON.stringify(result, null, 2) : JSON.stringify(result.brand));
-    return;
-  }
   const query = positional.join(' ').trim();
   const { listBrandMarks } = await import('../renderers/shared/brand-marks.mjs');
   const marks = listBrandMarks(query);
@@ -1484,12 +1401,12 @@ async function commandBrands(args) {
       query,
       count: marks.length,
       marks,
-      fallback: 'Run "mosofin brands capture <url> --json", then use the returned digest-pinned brand value.',
+      fallback: 'Omit "brand", or set a domain "icon" from "mosofin icons".',
     }, null, 2));
     return;
   }
   if (!marks.length) {
-    console.log(`No built-in brand matched "${query}". Run "mosofin brands capture <url> --json", then use the returned digest-pinned brand value.`);
+    console.log(`No built-in brand matched "${query}". Omit "brand", or set a domain "icon" from "mosofin icons".`);
     return;
   }
   const grouped = Map.groupBy
@@ -1675,9 +1592,6 @@ switch (command) {
     break;
   case 'deliver':
     await commandDeliver(args);
-    break;
-  case 'preview':
-    await commandPreview(args);
     break;
   case 'validate':
     commandValidate(args);
